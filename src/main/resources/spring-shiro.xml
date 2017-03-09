@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+       default-lazy-init="true">
+    <!-- 这是我的需要注入的到ealm中的两个执行访问数据库的bean -->
+    <bean id="userMgr" class="com.tgb.shirodemo.manager.UserManager"></bean>
+    <bean id="permissionMgr" class="com.tgb.shirodemo.manager.PermissionManager"></bean>
+    <bean id="test" class="com.tgb.shirodemo.servlet.Test"></bean>
+
+    <!-- shiro和数据库的桥梁，相当于DAO -->
+    <bean id="shiroRealm" class="com.tgb.shirodemo.shiro.MyRealm">
+        <property name="userManager" ref="userMgr"></property>
+        <property name="permissionManager" ref="permissionMgr"></property>
+    </bean>
+
+    <!-- 缓存管理器 -->
+    <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml"/>
+    </bean>
+
+    <!--安全管理器，上篇博客看到了它是统筹全局的一个组件 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <!-- 集成上数据访问的Realm -->
+        <property name="realm" ref="shiroRealm"></property>
+        <!-- 集成上缓存管理器 -->
+        <property name="cacheManager" ref="shiroEhcacheManager"></property>
+    </bean>
+
+    <!--保证shiro内部生命周期的bean被执行  -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!-- 以下两个是关于启用注解的配置 -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"></bean>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+    <!--shiro主过滤器的配置  -->
+    <bean id="shiroSecurityFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <!-- 集成上安全管理器 -->
+        <property name="securityManager" ref="securityManager"></property>
+        <property name="loginUrl" value="/page/login.jsp"></property>
+        <property name="successUrl" value="/page/main.jsp"></property>
+        <property name="unauthorizedUrl" value="/page/second.jsp"></property>
+        <!-- 过滤器链，对URL配置过滤规则 -->
+        <property name="filterChainDefinitions">
+            <value>
+                /=anon
+                /login=anon
+                /**=authc
+            </value>
+        </property>
+    </bean>
+</beans>
