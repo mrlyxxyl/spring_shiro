@@ -18,7 +18,7 @@ public class UserManager {
         User user = null;
         PreparedStatement statement = null;
         try {
-            statement = conn.prepareStatement("SELECT userName, userPsw, roleId FROM USER WHERE userName = ?");
+            statement = conn.prepareStatement("SELECT userName, userPsw, roleId FROM `user` WHERE userName = ?");
             statement.setString(1, username);
             rs = statement.executeQuery();
             if (rs.next()) {
@@ -28,6 +28,7 @@ public class UserManager {
                 user.setRoleId(rs.getString("roleId"));
             }
         } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 if (rs != null) {
