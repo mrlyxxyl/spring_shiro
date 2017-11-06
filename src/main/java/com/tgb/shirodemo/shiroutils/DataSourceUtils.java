@@ -10,7 +10,7 @@ public class DataSourceUtils {
     static {
         try {
             String driver = "com.mysql.jdbc.Driver";
-            String url = "jdbc:mysql://192.168.2.111:3306/test";
+            String url = "jdbc:mysql://192.168.1.125:3306/test";
             String username = "root";
             String password = "root";
             Class.forName(driver);

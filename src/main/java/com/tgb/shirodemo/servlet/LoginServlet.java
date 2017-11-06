@@ -30,10 +30,10 @@ public class LoginServlet extends HttpServlet {
             req.getRequestDispatcher("page/main.jsp").forward(req, resp);
         } catch (UnknownAccountException e) {
             System.out.println("用户不存在");
-            req.getRequestDispatcher("page/login.jsp").forward(req, resp);
+            req.getRequestDispatcher("page/main.jsp").forward(req, resp);
         } catch (IncorrectCredentialsException e) {
             System.out.println("用户密码不正确");
-            req.getRequestDispatcher("page/login.jsp").forward(req, resp);
+            req.getRequestDispatcher("page/main.jsp").forward(req, resp);
         }
     }
 }

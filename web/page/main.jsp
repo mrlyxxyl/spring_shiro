@@ -8,8 +8,11 @@
 </head>
 <body>
 <form action="money" method="post">
+    <%--后台登录失败的话，就是游客--%>
     <shiro:guest>我是游客</shiro:guest>
+    <%--后台登录成功的话，就是用户--%>
     <shiro:user>我是用户</shiro:user>
+
     <shiro:hasPermission name="user:add">
         <input type="submit" value="user:add">
     </shiro:hasPermission>
