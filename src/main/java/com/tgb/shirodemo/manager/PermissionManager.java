@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PermissionManager {
+
     public List<Permission> getPermission(User user) {
         Connection conn = DataSourceUtils.getConnection();
         ResultSet rs = null;

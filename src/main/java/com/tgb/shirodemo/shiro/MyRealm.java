@@ -36,7 +36,9 @@ public class MyRealm extends AuthorizingRealm {
     //查询用户的身份信息
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        User user = userManager.getUserByName(token.getPrincipal().toString());
+        String username = token.getPrincipal().toString();
+        String password = new String((char[]) token.getCredentials());
+        User user = userManager.getUserByName(username, password);
         if (user == null) {
             throw new UnknownAccountException();
         } else {

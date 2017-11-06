@@ -12,14 +12,15 @@ public class UserManager {
     private User user;
 
     //根据用户名查询用户信息
-    public User getUserByName(String username) {
+    public User getUserByName(String username, String password) {
         Connection conn = DataSourceUtils.getConnection();
         ResultSet rs = null;
         User user = null;
         PreparedStatement statement = null;
         try {
-            statement = conn.prepareStatement("SELECT userName, userPsw, roleId FROM `user` WHERE userName = ?");
+            statement = conn.prepareStatement("SELECT userName, userPsw, roleId FROM `user` WHERE userName = ? AND userPsw = ?");
             statement.setString(1, username);
+            statement.setString(2, password);
             rs = statement.executeQuery();
             if (rs.next()) {
                 user = new User();
